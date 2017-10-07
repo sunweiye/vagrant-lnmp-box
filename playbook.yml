@@ -1,0 +1,34 @@
+---
+- name: Initialise the ansible enviorment
+  hosts: all
+  gather_facts: False
+  pre_tasks:
+    - name: Gathering the system information
+      raw: lsb_release -s -i
+      register: os_name
+      changed_when: false
+
+    - name: If the remote host is not an Ubuntu system, break the execution
+      fail:
+        msg: "The remote host is not an Ubuntu System. This program does not support."
+      when: "'Ubuntu' not in os_name.stdout"
+
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-simplejson)
+      changed_when: False
+
+- name: Set up the development system by vagrant ansible provision
+  hosts: all
+  pre_tasks:
+    - name: Import the custom variables that are defined in .json, .jsn, .yaml, .yml for the development role
+      include_vars:
+        dir: 'vars'
+        depth: 2
+        extensions:
+          - yaml
+          - yml
+          - json
+          - jsn
+  roles:
+    - base
+    - development
