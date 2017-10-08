@@ -20,6 +20,11 @@
 - name: Set up the development system by vagrant ansible provision
   hosts: all
   pre_tasks:
+    - name: Determine if the custom variables path exists
+      stat:
+        path: vars
+      register: include_vars_path
+
     - name: Import the custom variables that are defined in .json, .jsn, .yaml, .yml
       include_vars:
         dir: 'vars'
@@ -29,6 +34,7 @@
           - yml
           - json
           - jsn
+      when: include_vars_path.stat.isdir is defined and include_vars_path.stat.isdir
 
     - name: Set variable of the path for temporary uploads files
       set_fact:
