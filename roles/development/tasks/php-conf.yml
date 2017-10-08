@@ -12,14 +12,14 @@
 - name: Phpize xdebug
   shell: phpize && ./configure --enable-xdebug
   args:
-    chdir: "{{ ansible_env.HOME}}/packages/xdebug-{{ php_conf.xdebug_version }}/"
+    chdir: "{{ temp_file_path }}/xdebug-{{ php_conf.xdebug_version }}/"
   register: xdebug_config
   tags:
     - php-xdebug
 
 - name: Make install xdebug
   make:
-    chdir: "{{ ansible_env.HOME}}/packages/xdebug-{{ php_conf.xdebug_version }}/"
+    chdir: "{{ temp_file_path }}/xdebug-{{ php_conf.xdebug_version }}/"
     target: install
   when: xdebug_config.rc == 0
   notify: Restart Web Server

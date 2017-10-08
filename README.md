@@ -28,6 +28,7 @@ php.net and compile to install it under the directory `\opt\php`
 The packages that will be installed in the box is configurable. The configuration file should be placed under `vars` of
 project directory.
 
+- packages.additional
 - nginx.version
 - php.version
 - nodejs.version

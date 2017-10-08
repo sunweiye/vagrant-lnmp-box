@@ -20,7 +20,7 @@
 - name: Set up the development system by vagrant ansible provision
   hosts: all
   pre_tasks:
-    - name: Import the custom variables that are defined in .json, .jsn, .yaml, .yml for the development role
+    - name: Import the custom variables that are defined in .json, .jsn, .yaml, .yml
       include_vars:
         dir: 'vars'
         depth: 2
@@ -29,6 +29,16 @@
           - yml
           - json
           - jsn
+
+    - name: Set variable of the path for temporary uploads files
+      set_fact:
+        temp_file_path: "{{ ansible_env.HOME }}/packages"
+
+    - name: Make directory under the ansible home directory for temporary uploads files
+      file:
+        path: "{{ temp_file_path }}"
+        state: directory
+        mode: 0755
   roles:
     - base
     - development
