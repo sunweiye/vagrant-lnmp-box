@@ -1,2 +1,5 @@
 .idea/
 vars/
+.vagrant/
+playbook.retry
+*.log
