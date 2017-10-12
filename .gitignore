@@ -3,3 +3,4 @@ vars/
 .vagrant/
 playbook.retry
 *.log
+config.box.json
