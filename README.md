@@ -21,6 +21,12 @@ php.net and compile to install it under the directory `\opt\php`
 - mariadb - The mariadb is installed with mysql secure installation
 - image processing libraries: graphicsmagick, libjpeg-turbo-progs, optipng, pngcrush, pngquant, pngnq
 
+## What are provided in the box
+- Self-signed certificate
+- Website root path: The root path is always under the path `/projects/{your-project-name}/website`. By default, `info.php`
+will be created with `phpinfo()` for the test purpose. You can test the box with URL `https://your-ip/info.php`, it should
+print the information of PHP 
+
 ## Configuration
 ### Configuration of the vagrant box
 
@@ -34,3 +40,4 @@ project directory.
 - nodejs.version
 - java.version
 - mysql.root_passwd
+- openssl
