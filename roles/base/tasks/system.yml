@@ -1,38 +1,16 @@
 ---
-- name: Updates the package lists and install basic packages
-  block:
-    - name: Run "apt-get update" as a separate step
-      apt:
-        update_cache: yes
-  rescue:
-    - name: Remove the lock file of apt
-      file:
-        path: "{{ item }}"
-        state: absent
-      with_items:
-        - /var/cache/apt/archives/lock
-        - /var/lib/dpkg/lock
-        - /var/lib/apt/lists/lock
-
-    - name: Reconfigure packages
-      command: dpkg --configure -a
-
-    - name: Run "apt-get update" again after remove the lock
-      apt:
-        update_cache: yes
-  always:
-    - name: Install basic package
-      apt:
-        name: "{{item}}"
-        update_cache: yes
-        state: latest
-      with_items: "{{packages.basic}}"
-
-    - name: Install the packages that is required by ansible
-      apt:
-        name: "{{item}}"
-        state: latest
-      with_items: "{{packages.ansible}}"
+- name: Install basic package
+  apt:
+    name: "{{item}}"
+    update_cache: yes
+    state: latest
+  with_items: "{{packages.basic}}"
   tags:
     - packages
+    - system
+
+- name: Set system timezone to the configured value
+  timezone:
+    name: "{{system.timezone}}"
+  tags:
     - system

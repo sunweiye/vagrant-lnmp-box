@@ -24,6 +24,8 @@
       local_action: stat path=vars
       become: false
       register: include_vars_path
+      tags:
+        - pre-tasks
 
     - name: Import the custom variables that are defined in .json, .jsn, .yaml, .yml
       include_vars:
@@ -35,16 +37,53 @@
           - json
           - jsn
       when: include_vars_path.stat.isdir is defined and include_vars_path.stat.isdir
+      tags:
+        - pre-tasks
 
     - name: Set variable of the path for temporary uploads files
       set_fact:
         temp_file_path: "{{ ansible_env.HOME }}/packages"
+      tags:
+        - pre-tasks
 
     - name: Make directory under the ansible home directory for temporary uploads files
       file:
         path: "{{ temp_file_path }}"
         state: directory
         mode: 0755
+      tags:
+        - pre-tasks
+
+    - name: Updates the package lists and install ansible reqiured packages
+      block:
+        - name: Run "apt-get update" as a separate step
+          apt:
+            update_cache: yes
+      rescue:
+        - name: Remove the lock file of apt
+          file:
+            path: "{{ item }}"
+            state: absent
+          with_items:
+            - /var/cache/apt/archives/lock
+            - /var/lib/dpkg/lock
+            - /var/lib/apt/lists/lock
+
+        - name: Reconfigure packages
+          command: dpkg --configure -a
+
+        - name: Run "apt-get update" again after remove the lock
+          apt:
+            update_cache: yes
+      always:
+        - name: Install the packages that is required by ansible
+          apt:
+            name: "{{item}}"
+            state: latest
+          with_items: "{{ansible.requirements}}"
+      tags:
+        - packages
+        - pre-tasks
   roles:
     - base
     - development

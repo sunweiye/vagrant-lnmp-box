@@ -1,5 +1,5 @@
 {
-  "project": "welding-ms",
+  "project": "my-project",
   "name": "your-name",
   "provider": "virtualbox",
   "box":{

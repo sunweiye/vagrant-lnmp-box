@@ -39,9 +39,6 @@ packages:
     - "ldap-utils"
     - "libldap2-dev"
     - "libsnmp-dev"
-  ansible:
-    - "python-pexpect"
-    - "python-mysqldb"
   image:
     - "graphicsmagick"
     - "libjpeg-turbo-progs"

@@ -3,15 +3,28 @@ nginx_server:
   user: vagrant
   usergroup: vagrant
   default_config: "default.conf"
-nginx_domain_name: dev.myproject.com
-nginx_project_name: project
 
 php_conf:
-  timezone: UTC
   xdebug_version: 2.5.5
 
 mysql:
   root_passwd: root
-  user: ubuntu
-  passwd: ubuntu
-  dbname: website
+
+openssl:
+  csr_fields:
+    country_name: ''
+    locality_name: ''
+    state_or_province_name: ''
+    organization_name: ''
+    organizational_unit_name: ''
+    common_name: '*'
+    email_address: 'email@youemail.com'
+
+project:
+  name: myproject
+  domain:
+    dev: '_'
+  database:
+    dbname: myproject
+    user: myproject
+    passwd: myproject
