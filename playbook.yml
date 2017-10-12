@@ -21,8 +21,8 @@
   hosts: all
   pre_tasks:
     - name: Determine if the custom variables path exists
-      stat:
-        path: vars
+      local_action: stat path=vars
+      become: false
       register: include_vars_path
 
     - name: Import the custom variables that are defined in .json, .jsn, .yaml, .yml
