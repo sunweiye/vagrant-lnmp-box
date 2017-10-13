@@ -65,9 +65,8 @@ Vagrant.configure(2) do |config|
   require_relative "./providers/#{config_data['provider']}.rb"
   config_vm(config.vm, config_data)
 
-  # @todo Get guest vm ip and set host file for ansible and windows
-  # @todo Configuration in json file and supports multiple playbooks
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "playbook.yml"
+    ansible.config_file = ".ansible/ansible.cfg"
+    ansible.playbook = ".ansible/playbook.yml"
   end
 end

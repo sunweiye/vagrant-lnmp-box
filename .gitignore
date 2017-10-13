@@ -1,6 +1,6 @@
 .idea/
-vars/
+/.ansible/vars/
 .vagrant/
 playbook.retry
-*.log
+/*.log
 config.box.json
