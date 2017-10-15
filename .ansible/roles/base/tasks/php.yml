@@ -29,7 +29,7 @@
       shell:  "{{ item }}"
       args:
         chdir: "{{ temp_file_path }}/php-{{ php.version }}/"
-        creates: php.install.lock
+        creates: "{{ temp_file_path }}/php-{{ php.version }}/config.log"
       with_items:
         - "{{ php.build_configure_command }}"
         - "{{ php.source_configure_command }}"
