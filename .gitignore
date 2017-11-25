@@ -1,5 +1,7 @@
 .idea/
 /.ansible/custom/
+/.ansible/configs/all.yml
+/.ansible/ansible.cfg
 .vagrant/
 *.retry
 /*.log
