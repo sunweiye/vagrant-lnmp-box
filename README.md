@@ -27,6 +27,15 @@ php.net and compile to install it under the directory `\opt\php`
 will be created with `phpinfo()` for the test purpose. You can test the box with URL `https://your-ip/info.php`, it should
 print the information of PHP 
 
+## How to use it
+Before running the box, you need to do some setup steps to configure the box parameter.
+- Create the box configuration file `config.box.json` in the project root directory. You can use virtual box or vSphere
+as provider.
+- Create the ansible configuration file `ansible.cfg` in `.ansible` directory. You can simply copy the configurations in
+`ansible.cfg.example` into your configuration file. If you want to use your customized role for project or others provision,
+you should set the `roles_path` to your role path as it is set to the `custom_roles_path` variable.
+- Create the `all.yml` in `.ansible/configs`. This file is used to store basic predefined variables that are used by play. 
+
 ## Configuration
 ### Configuration of the vagrant box
 
