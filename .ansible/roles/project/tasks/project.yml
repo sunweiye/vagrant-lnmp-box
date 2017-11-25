@@ -1,12 +1,12 @@
 ---
-- name: Write phpinfo() into the info.php under the project website directory
+- name: Write phpinfo() into the info.php under the project website directory for testing purpose
   block:
-    - name: Check if weld project directory exists
+    - name: Check if the project directory exists
       stat:
         path: "/projects/{{project.name}}/"
       register: project_path
 
-    - name: Create directory for website project
+    - name: Create the project diretory with website as sub directory to hold website files
       file:
         path: "/projects/{{project.name}}/website"
         state: directory
@@ -16,7 +16,7 @@
         recurse: true
       when: project_path.stat.exists == False
 
-    - name: Write phpinfo() into the info.php under the project website directory
+    - name: Create info.php to print the php configruation
       copy:
         content: "<?php phpinfo(); ?>"
         dest: "/projects/{{project.name}}/website/info.php"
@@ -28,13 +28,13 @@
 
 - name: Create project database
   block:
-    - name: Check if the database weld-ms exists
+    - name: Check if the database with configured name exists
       raw: mysql -e 'SHOW DATABASES;' | grep {{project.database.dbname}}
       register: dbstatus
       failed_when: dbstatus.rc < 0
       changed_when: false
 
-    - name: Create a new database for project with name weld-ms
+    - name: Create a new database for project with configured name
       mysql_db:
         name: "{{project.database.dbname}}"
         state: present

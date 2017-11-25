@@ -30,6 +30,16 @@ print the information of PHP
 ## Configuration
 ### Configuration of the vagrant box
 
+### Add custom variables and roles configuration
+You can specify the custom variables files path and roles path to add or override the current configurations.
+- `custom_vars_path`: Define the customized variables files path. Default value is the directory under the `custom/vars`
+in the current playbook directory. You can also specified an absolute path.
+- `custom_play_role`: You can it with the role name, which should override the default `project` role. If this variable
+is not set or in the role name directory under the `custom_roles_path` doesn't have `tasks/main.yml` file, the default
+`project` role will be used to create a simple website project to print the php configurations.
+- `custom_roles_path`: Define the customized roles path, which will override the default `project` role. The default value
+is the directory under the `custom/roles` in the current playbook directory.
+
 ### Configuration of the packages
 The packages that will be installed in the box is configurable. The configuration file should be placed under `vars` of
 project directory.

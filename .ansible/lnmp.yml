@@ -2,7 +2,7 @@
 - name: Initialise the ansible enviorment
   hosts: all
   gather_facts: False
-  pre_tasks:
+  tasks:
     - name: Gathering the system information
       raw: lsb_release -s -i
       register: os_name
@@ -19,30 +19,30 @@
 
 - name: Set up the development system by vagrant ansible provision
   hosts: all
+  vars_files:
+    - configs/all.yml
+  vars:
+    temp_file_path: "{{ ansible_env.HOME }}/packages"
+    play_custom_role: "{{custom_play_role is defined and custom_roles_path is defined and [custom_roles_path, custom_play_role, 'tasks/main.yml']|join('/')|is_file}}"
   pre_tasks:
     - name: Determine if the custom variables path exists
-      local_action: stat path=vars
+      local_action: "stat path={{custom_vars_path}}"
       become: false
       register: include_vars_path
+      when: custom_vars_path is defined
       tags:
         - pre-tasks
 
     - name: Import the custom variables that are defined in .json, .jsn, .yaml, .yml
       include_vars:
-        dir: 'vars'
+        dir: "{{custom_vars_path}}"
         depth: 2
         extensions:
           - yaml
           - yml
           - json
           - jsn
-      when: include_vars_path.stat.isdir is defined and include_vars_path.stat.isdir
-      tags:
-        - pre-tasks
-
-    - name: Set variable of the path for temporary uploads files
-      set_fact:
-        temp_file_path: "{{ ansible_env.HOME }}/packages"
+      when: custom_vars_path is defined and include_vars_path.stat.isdir is defined and include_vars_path.stat.isdir
       tags:
         - pre-tasks
 
@@ -90,3 +90,4 @@
   roles:
     - base
     - development
+    - "{{ custom_play_role if play_custom_role else 'project'}}"
