@@ -15,8 +15,12 @@ packages:
     - "pkg-config"
     - "snmp-mibs-downloader"
     - "zip"
+    - "git"
+    - "apt-transport-https"
+    - "ca-certificates"
+    - "software-properties-common"
+    - "python-pip"
   dependencies:
-    - "libmcrypt-dev"
     - "libcurl4-gnutls-dev"
     - "libssl-dev"
     - "libjpeg-dev"
@@ -39,6 +43,7 @@ packages:
     - "ldap-utils"
     - "libldap2-dev"
     - "libsnmp-dev"
+    - "zlibc"
   image:
     - "graphicsmagick"
     - "libjpeg-turbo-progs"
@@ -46,27 +51,35 @@ packages:
     - "pngcrush"
     - "pngquant"
     - "pngnq"
+  docker:
+    - "docker-ce"
+    - "docker-compose"
+
+docker:
+  GPG_key: 0EBFCD88
+  source_list: "https://download.docker.com/linux/ubuntu"
 
 nodejs:
   source_version: "8.x"
   version: "8.*"
 
 nginx:
-  version: "1.12.1"
+  version: "1.14.0"
 
 java:
   version: "8"
 
 php:
-  version: "7.1.9"
+  distribution_url: "http://php.net/distributions"
+  version: "7.1.18"
   build_configure_command: "./buildconf --force"
   source_configure_command: >
     ./configure
     --prefix=/opt/php
     --with-config-file-path=/opt/php/conf
     --enable-fpm
-    --with-fpm-user=vagrant
-    --with-fpm-group=vagrant
+    --with-fpm-user={{nginx_server.user}}
+    --with-fpm-group={{nginx_server.usergroup}}
     --enable-mbstring
     --enable-zip
     --enable-bcmath
@@ -78,7 +91,6 @@ php:
     --enable-sysvshm
     --enable-wddx
     --with-curl=/usr/bin
-    --with-mcrypt
     --with-iconv-dir=/usr
     --with-pspell
     --with-gd

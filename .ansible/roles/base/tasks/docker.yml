@@ -1,0 +1,57 @@
+---
+- name: Check if docker is installed
+  command: "docker -v"
+  register: is_docker_installed
+  failed_when: is_docker_installed.rc < 0
+  changed_when: false
+
+- name: Install extra packages for Ubuntu Trusty 14.04
+  block:
+    - name: Get the kernel release of Ubuntu
+      command: uname -r
+      register: kernel_release
+
+    - name: Install extra packages for Trusty 14.04
+      apt:
+        name: "{{item}}"
+        update_cache: yes
+        state: latest
+      with_items:
+        - "linux-image-extra-{{kernel_release.stdout}}"
+        - linux-image-extra-virtual
+  when: ansible_lsb.codename == "trusty" and is_docker_installed.rc > 0
+
+- name: Install Docker CE
+  block:
+    - name: Check if the signing key for docker package repository exists
+      raw: "apt-key list | grep docker"
+      register: exist_docker_key
+      failed_when: exist_docker_key.rc < 0
+      changed_when: false
+
+    - name: Add Docker’s official GPG key
+      apt_key:
+        id: "{{docker.GPG_key}}"
+        url: "{{docker.source_list}}/gpg"
+        state: present
+      when: exist_docker_key.rc > 0
+
+    - name: Check if the docker repository is in the source list
+      raw: "grep docker /etc/apt/sources.list /etc/apt/sources.list.d/*"
+      register: exist_docker_repo
+      failed_when: exist_docker_repo.rc < 0
+      changed_when: false
+
+    - name: Add the docker package repositry into source list
+      apt_repository:
+        repo: "deb [arch=amd64] {{docker.source_list}} {{ansible_lsb.codename}} stable"
+        state: present
+      when: exist_docker_repo.rc > 0
+
+    - name: Install Docker CE
+      apt:
+        name: "{{item}}"
+        update_cache: yes
+        state: latest
+      with_items: "{{packages.docker}}"
+  when: is_docker_installed.rc > 0

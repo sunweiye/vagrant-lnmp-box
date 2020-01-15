@@ -20,7 +20,7 @@
   block:
     - name: Download PHP source code and unzip it
       unarchive:
-        src: "http://php.net/distributions/php-{{ php.version }}.tar.gz"
+        src: "{{php.distribution_url}}/php-{{ php.version }}.tar.gz"
         dest: "{{ temp_file_path }}"
         remote_src: yes
         creates: php.source.lock

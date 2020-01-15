@@ -1,6 +1,6 @@
 ---
 - name: Check if nodejs is installed
-  raw: "dpkg -s nodejs | grep {{nodejs.version}}"
+  raw: "dpkg -s nodejs | grep Version:\ {{nodejs.version}}"
   register: is_nodejs_installed
   failed_when: is_nodejs_installed.rc < 0
   changed_when: false
